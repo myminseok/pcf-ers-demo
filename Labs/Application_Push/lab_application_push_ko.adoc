@@ -56,7 +56,6 @@ $ cf push
 
 다음과 같은 로그가 보입니다.
 
-====
 ----
 
 Pushing from manifest to org workshop / space dev as workshop10...
@@ -147,7 +146,11 @@ start command:     JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/j
 
 ----
 
-==== cf cli로 배포된 애플리케이션을 확인해보세요.
+
+=== cf apps
+
+cf cli로 배포된 애플리케이션을 확인해보세요.
+
 ----
 $ cf apps
 Getting apps in org workshop / space dev as workshop10...
@@ -155,6 +158,7 @@ OK
 
 name              requested state   instances   memory   disk   urls
 attendees         started           1/1         768M     1G     attendees-cheerful-reedbuck.apps.pas.baemin.ai
+
 ----
 
 
