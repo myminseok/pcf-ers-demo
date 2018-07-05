@@ -1,0 +1,196 @@
+= 예제 애플리케이션 배포하기
+:toc: right
+:imagesdir: ../images
+
+[abstract]
+--
+Pivotal Cloud Foundry의 목적은 애플리케이션을 운영하는 것입니다. 간단한 스프링 부트 애플리케이션을 배포해보겠습니다.
+이 랩이 끝나면 여러분은 애플리케이션이 배포되는 과정을 이해하고 여러분의 애플리케이션은 여러분의 계정에서 실행됩니다.
+--
+
+예상 시간: 30 분
+
+== 타겟 환경 지정
+
+. 여러분의 환경에 맞는 최신의 cloud foundry cli를 내려 받으세요. https://github.com/cloudfoundry/cli/releases 
+
+. cf cli를 PCF 환경에 연결하세요:
++
+----
+$ cf api --skip-ssl-validation https://api.<DOMAIN_PROVIDED_BY_INSTRUCTOR>
+
+cf api  https://apps.system.pas.baemin.ai --skip-ssl-validation
+----
+
+. Pivotal Cloud Foundry로 로그인 하기:
++
+----
+$ cf login
+----
++
+여러분의 계정과 비밀번호를 입력합니다.
+
+
+== PC에서 애플리케이션을 빌드하고 배포(push) 하기
+
+내려받은 소스코드 경로로 이동:
+----
+$ cd pcf-ers-demo
+----
+
+=== 빌드하기
+
+메이븐 Wrapper를 이용하여 빌드하기 (수 분 소요):
+
+----
+$ ./mvnw package -DskipTests
+----
+
+=== Push
+
+PCF로 애플리케이션을 배포합니다.
+
+----
+$ cf push
+----
+
+다음과 같은 로그가 보입니다.
+
+====
+----
+
+Pushing from manifest to org workshop / space dev as workshop10...
+Using manifest file /Users/minseok/_dev/pcf-sample/pcf-ers-demo/manifest.yml  // (1) CLI가 배포할 애플리케이션의 이름, 메모리, 인스턴스 수, jar파일 정보를 모읍니다. manifest.yml파일 참조.
+Getting app info...
+Creating app with these attributes...
++ name:        attendees
+  path:        /Users/minseok/_dev/pcf-sample/pcf-ers-demo/target/pcf-ers-demo1-0.0.1-SNAPSHOT.jar
++ instances:   1
++ memory:      768M
+  env:
++   SPRING_PROFILES_ACTIVE
+  routes:
++   attendees-cheerful-reedbuck.apps.pas.baemin.ai
+
+Creating app attendees...                    // (2) PCF의 여러분의 space에 애플리케이션을 생성합니다.
+Mapping routes...                            // (3) PCF의 goRouter에 애플리케이션이 사용할 도메인을 등록합니다. http://docs.cloudfoundry.org/concepts/architecture/router.html[(Go)Router
+Comparing local files to remote cache...     // (4) PCF에 애플리케이션 캐시확인
+Packaging files to upload...                  
+Uploading files...                           // (5) jar파일, manifest정보 업로드
+ 681.98 KiB / 681.98 KiB [====================================================================================================================================================================] 100.00% 1s
+
+Waiting for API to complete processing files...
+
+Staging app and tracing logs...              // (6) 애플리케이션 실행에 필요한 소프트웨어 스택 자동 조합 및 컨테이너 이미지 생성
+   Downloading binary_buildpack...
+   Downloading staticfile_buildpack...
+   Downloading java_buildpack_offline...
+   Downloading nodejs_buildpack...
+   Downloading ruby_buildpack...
+   Downloaded java_buildpack_offline
+   Downloading php_buildpack...
+   Downloaded binary_buildpack
+   Downloading go_buildpack...
+   Downloaded ruby_buildpack
+   Downloading python_buildpack...
+   Downloaded nodejs_buildpack
+   Downloading dotnet_core_buildpack...
+   Downloaded staticfile_buildpack
+   Downloaded php_buildpack
+   Downloaded go_buildpack
+   Downloaded python_buildpack
+   Downloaded dotnet_core_buildpack
+   Cell 7284bb51-ad4f-4b06-a85e-8baabd713863 creating container for instance 779551b0-3948-4a37-be14-c67588b67823
+   Cell 7284bb51-ad4f-4b06-a85e-8baabd713863 successfully created container for instance 779551b0-3948-4a37-be14-c67588b67823
+   Downloading app package...
+   Downloaded app package (34.4M)
+   -----> Java Buildpack v4.12 (offline) | https://github.com/cloudfoundry/java-buildpack.git#5dca820
+   -----> Downloading Jvmkill Agent 1.12.0_RELEASE from https://java-buildpack.cloudfoundry.org/jvmkill/trusty/x86_64/jvmkill-1.12.0_RELEASE.so (found in cache)
+   -----> Downloading Open Jdk JRE 1.8.0_172 from https://java-buildpack.cloudfoundry.org/openjdk/trusty/x86_64/openjdk-1.8.0_172.tar.gz (found in cache)
+          Expanding Open Jdk JRE to .java-buildpack/open_jdk_jre (1.0s)
+          JVM DNS caching disabled in lieu of BOSH DNS caching
+   -----> Downloading Open JDK Like Memory Calculator 3.13.0_RELEASE from https://java-buildpack.cloudfoundry.org/memory-calculator/trusty/x86_64/memory-calculator-3.13.0_RELEASE.tar.gz (found in cache)
+          Loaded Classes: 17719, Threads: 250
+   -----> Downloading Client Certificate Mapper 1.6.0_RELEASE from https://java-buildpack.cloudfoundry.org/client-certificate-mapper/client-certificate-mapper-1.6.0_RELEASE.jar (found in cache)
+   -----> Downloading Container Security Provider 1.13.0_RELEASE from https://java-buildpack.cloudfoundry.org/container-security-provider/container-security-provider-1.13.0_RELEASE.jar (found in cache)
+   -----> Downloading Spring Auto Reconfiguration 2.4.0_RELEASE from https://java-buildpack.cloudfoundry.org/auto-reconfiguration/auto-reconfiguration-2.4.0_RELEASE.jar (found in cache)
+   Exit status 0                                          
+   Uploading droplet, build artifacts cache...                 (7) 컨테이너 이미지 (droplet) 생성완료 및 캐시
+   Uploading build artifacts cache...
+   Uploading droplet...
+   Uploaded build artifacts cache (131B)
+   Uploaded droplet (80.2M)
+   Uploading complete
+   Cell 7284bb51-ad4f-4b06-a85e-8baabd713863 stopping instance 779551b0-3948-4a37-be14-c67588b67823.       
+   Cell 7284bb51-ad4f-4b06-a85e-8baabd713863 destroying container for instance 779551b0-3948-4a37-be14-c67588b67823
+
+Waiting for app to start...
+
+name:              attendees
+requested state:   started
+instances:         1/1
+usage:             768M x 1 instances
+routes:            attendees-cheerful-reedbuck.apps.pas.baemin.ai
+last uploaded:     Thu 05 Jul 22:35:30 KST 2018
+stack:             cflinuxfs2
+buildpack:         client-certificate-mapper=1.6.0_RELEASE container-security-provider=1.13.0_RELEASE java-buildpack=v4.12-offline-https://github.com/cloudfoundry/java-buildpack.git#5dca820
+                   java-main java-opts java-security jvmkill-agent=1.12.0_RELEASE open-jdk-...
+start command:     JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/jvmkill-1.12.0_RELEASE=printHeapHistogram=1 -Djava.io.tmpdir=$TMPDIR
+                   -Djava.ext.dirs=$PWD/.java-buildpack/container_security_provider:$PWD/.java-buildpack/open_jdk_jre/lib/ext -Djava.security.properties=$PWD/.java-buildpack/java_security/java.security
+                   $JAVA_OPTS" && CALCULATED_MEMORY=$($PWD/.java-buildpack/open_jdk_jre/bin/java-buildpack-memory-calculator-3.13.0_RELEASE -totMemory=$MEMORY_LIMIT -loadedClasses=18428
+                   -poolType=metaspace -stackThreads=250 -vmOptions="$JAVA_OPTS") && echo JVM Memory Configuration: $CALCULATED_MEMORY && JAVA_OPTS="$JAVA_OPTS $CALCULATED_MEMORY" && MALLOC_ARENA_MAX=2
+                   SERVER_PORT=$PORT eval exec $PWD/.java-buildpack/open_jdk_jre/bin/java $JAVA_OPTS -cp $PWD/. org.springframework.boot.loader.JarLauncher
+
+     state     since                  cpu    memory           disk           details
+#0   running   2018-07-05T13:36:23Z   0.0%   205.6M of 768M   162.3M of 1G                        // (8) 애플리케이션이 서비스로 배포완료.
+
+
+----
+
+==== cf cli로 배포된 애플리케이션을 확인해보세요.
+----
+$ cf apps
+Getting apps in org workshop / space dev as workshop10...
+OK
+
+name              requested state   instances   memory   disk   urls
+attendees         started           1/1         768M     1G     attendees-cheerful-reedbuck.apps.pas.baemin.ai
+----
+
+
+=== 웹브라우져로 애플리케이션에 접속해봅니다.
+
+https://attendees-naturopathic-souple.<DOMAIN-PROVIDED-BY-INSTRUCTOR>`
+
+
+
+=== 스케일링으로 성능 올리기
+
+애플리케이션의 인스턴스(컨테이너) 수를 조정합니다.
+
+----
+$ cf scale -i 2 attendees
+----
+
+=== 애플리케이션의 통합로그 수집
+
+애플리케이션의 컨테이너의 모든 로그를 실시간으로 조회합니다.
+
+----
+$ cf logs attendees
+----
+
+
+=== 종료하기
+
+----
+$ cf stop attendees
+----
+
+=== 삭제
+
+----
+$ cf delete attendees
+
+----
+
