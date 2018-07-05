@@ -10,7 +10,14 @@ Pivotal Cloud Foundry의 목적은 애플리케이션을 운영하는 것입니�
 
 예상 시간: 30 분
 
-== 앱 배포 타겟 지정
+
+== cf cli 도움말 (cf help -a)
+
+---
+$ cf help -a
+---
+
+== 앱 배포 타겟 지정 (cf api)
 
 . 여러분의 환경에 맞는 최신의 cloud foundry cli를 내려 받으세요. https://github.com/cloudfoundry/cli/releases 
 
@@ -22,10 +29,11 @@ $ cf api --skip-ssl-validation https://api.<DOMAIN_PROVIDED_BY_INSTRUCTOR>
 cf api  https://apps.system.pas.baemin.ai --skip-ssl-validation
 ----
 
-. Pivotal Cloud Foundry로 로그인 하기:
+. Pivotal Cloud Foundry로 로그인 하기 (cf login)
+
 +
 ----
-$ cf login
+$ cf login 
 ----
 +
 여러분의 계정과 비밀번호를 입력합니다.
@@ -38,7 +46,7 @@ $ cf login
 $ cd pcf-ers-demo
 ----
 
-=== 빌드하기
+=== 앱 빌드하기
 
 메이븐 Wrapper를 이용하여 빌드하기 (수 분 소요):
 
@@ -46,7 +54,7 @@ $ cd pcf-ers-demo
 $ ./mvnw package -DskipTests
 ----
 
-=== Push
+=== 앱 
 
 PCF로 애플리케이션을 배포합니다.
 
@@ -147,7 +155,7 @@ start command:     JAVA_OPTS="-agentpath:$PWD/.java-buildpack/open_jdk_jre/bin/j
 ----
 
 
-=== cf apps
+=== 배포된 앱 확인 (cf apps)
 
 cf cli로 배포된 애플리케이션을 확인해보세요.
 
@@ -168,7 +176,7 @@ https://attendees-naturopathic-souple.<DOMAIN-PROVIDED-BY-INSTRUCTOR>`
 
 
 
-=== 스케일링으로 성능 올리기
+=== 스케일링으로 성능 올리기 (cf scale)
 
 애플리케이션의 인스턴스(컨테이너) 수를 조정합니다.
 
@@ -191,7 +199,7 @@ $ cf logs attendees
 $ cf stop attendees
 ----
 
-=== 삭제
+=== 삭제 (cf delete)
 
 ----
 $ cf delete attendees
