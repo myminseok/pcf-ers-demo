@@ -54,7 +54,7 @@ $ cd pcf-ers-demo
 $ ./mvnw package -DskipTests
 ----
 
-=== 앱 
+=== 앱 배포하기( cf push)
 
 PCF로 애플리케이션을 배포합니다.
 
