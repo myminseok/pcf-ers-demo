@@ -10,7 +10,7 @@ Pivotal Cloud Foundry의 목적은 애플리케이션을 운영하는 것입니�
 
 예상 시간: 30 분
 
-== 타겟 환경 지정
+== 앱 배포 타겟 지정
 
 . 여러분의 환경에 맞는 최신의 cloud foundry cli를 내려 받으세요. https://github.com/cloudfoundry/cli/releases 
 
