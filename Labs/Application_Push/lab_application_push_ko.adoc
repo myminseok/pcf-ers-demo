@@ -26,7 +26,7 @@ $ cf help -a
 ----
 $ cf api --skip-ssl-validation https://api.<DOMAIN_PROVIDED_BY_INSTRUCTOR>
 
-cf api  https://apps.system.pas.baemin.ai --skip-ssl-validation
+cf api  https://api.system.pas.baemin.ai --skip-ssl-validation
 ----
 
 . Pivotal Cloud Foundry로 로그인 하기 (cf login)
